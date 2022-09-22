@@ -1,25 +1,32 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/home';
+
+import io from 'socket.io-client'; // Add this
+import Chat from './pages/chat';
+const socket = io.connect('http://localhost:4000'); // Add this -- our server will run on port 4000, so we connect to it from here
+
 
 function App() {
+
+  const [username, setUsername] = React.useState(''); // Add this
+  const [room, setRoom] = React.useState(''); // Add this
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className='App'>
+        <Routes>
+          <Route path='/' element={<Home username={username} setUsername={setUsername} room={room}  setRoom={setRoom}  socket={socket} /> }></Route>
+          <Route path='/chat' element={<Chat username={username} room={room} socket={socket} />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
+
+
+// https://www.freecodecamp.org/news/build-a-realtime-chat-app-with-react-express-socketio-and-harperdb/
 
 export default App;
